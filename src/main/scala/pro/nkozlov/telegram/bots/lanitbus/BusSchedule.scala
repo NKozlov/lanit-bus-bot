@@ -141,7 +141,11 @@ object BusSchedule extends LazyLogging {
   }
 
   // Ближайший транспорт до офиса (по текущему времени)
-  def scheduleToOffice() = {
+  def scheduleToOffice(date: String): List[List[List[String]]] = {
+    logger.debug("invoke scheduleToMetro({})", date)
+    val scheduleFromRizhskaya = scheduleBus("ToOffice")("FromRizhskaya").filter(list => list(1) > date).sortBy(list => list(1))
+    val scheduleFromMarinaRoszha = scheduleBus("ToOffice")("FromMarinaRoszha").filter(list => list(1) > date).sortBy(list => list(1))
 
+    List(scheduleFromRizhskaya, scheduleFromMarinaRoszha)
   }
 }
