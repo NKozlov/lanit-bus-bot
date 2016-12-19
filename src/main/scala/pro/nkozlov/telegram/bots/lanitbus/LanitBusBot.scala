@@ -3,15 +3,13 @@ package pro.nkozlov.telegram.bots.lanitbus
 import info.mukel.telegrambot4s._
 import api._
 import methods._
-import models._
 import Implicits._
-import com.typesafe.scalalogging.LazyLogging
 
 object LanitBusBot extends TelegramBot with Polling with Commands {
 
   import BusSchedule._
 
-  def token = "257669222:AAEhSlFWkxv651Cy9IXIsLjbNsfWQI_MttE"
+  def token: String = ConfigContext.token
 
   on("/rizhskaya_office", "Рижская-Офис (маршрутки).") { implicit msg =>
     args =>
@@ -54,21 +52,21 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
       def fromRizhskayaM =
         if (sch.head.exists(list => list.head contains "М"))
-          sch.head.filter(list => list.head contains "М").take(2).map(list => list(1)).mkString(", ")
+          sch.head.filter(list => list.head contains "М").take(4).map(list => list(1)).mkString(", ")
         else "Маршрутки уже спят :)"
 
       def fromRizhskayaA =
         if (sch.head.exists(list => list.head contains "А"))
-          sch.head.filter(list => list.head contains "А").take(2).map(list => list(1)).mkString(", ")
+          sch.head.filter(list => list.head contains "А").take(4).map(list => list(1)).mkString(", ")
         else "Автобусы уже спят :)"
 
       def fromMarinaRoszhaM =
         if (sch(1).exists(list => list.head contains "М"))
-          sch(1).filter(list => list.head contains "М").take(2).map(list => list(1)).mkString(", ")
+          sch(1).filter(list => list.head contains "М").take(4).map(list => list(1)).mkString(", ")
         else "Маршрутки уже спят :)"
 
       reply(
-        "_Ближайший транспорт (по времени) до офиса (маршрутки и автобусы)_\n" +
+        "_Ближайший транспорт до офиса_\n" +
           "*От м. Рижская*\n" +
           "\uD83D\uDE90(М): " + fromRizhskayaM + "\n" +
           "\uD83D\uDE8C(А): " + fromRizhskayaA + "\n\n" +
@@ -85,21 +83,21 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
       def toRizhskayaM =
         if (sch.head.exists(list => list.head contains "М"))
-          sch.head.filter(list => list.head contains "М").take(2).map(list => list(1)).mkString(", ")
+          sch.head.filter(list => list.head contains "М").take(4).map(list => list(1)).mkString(", ")
         else "Маршрутки уже спят :)"
 
       def toRizhskayaA =
         if (sch.head.exists(list => list.head contains "А"))
-          sch.head.filter(list => list.head contains "А").take(2).map(list => list(1)).mkString(", ")
+          sch.head.filter(list => list.head contains "А").take(4).map(list => list(1)).mkString(", ")
         else "Автобусы уже спят :)"
 
       def toMarinaRoszhaM =
         if (sch(1).exists(list => list.head contains "М"))
-          sch(1).filter(list => list.head contains "М").take(2).map(list => list(1)).mkString(", ")
+          sch(1).filter(list => list.head contains "М").take(4).map(list => list(1)).mkString(", ")
         else "Маршрутки уже спят :)"
 
       reply(
-        "_Ближайший транспорт (по времени) до метро (маршрутки и автобусы)_\n" +
+        "_Ближайший транспорт из офиса_\n" +
           "*До м. Рижская*\n" +
           "\uD83D\uDE90(М): " + toRizhskayaM + "\n" +
           "\uD83D\uDE8C(А): " + toRizhskayaA + "\n\n" +
@@ -111,7 +109,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
       )
   }
 
-  on("/support") { implicit msg =>
+  on("/support", "Вопросы и предложения") { implicit msg =>
     args =>
       val firstName = msg.from.get.firstName
       val lastName = msg.from.get.lastName.get
@@ -124,6 +122,8 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
            |Исходный код выложен на [GitHub](https://github.com/NKozlov/lanit-bus-bot).
            |
            |Предложения и замечания по работе бота можно отправить на email: [kozlov.bots@gmail.com](mailto:kozlov.bots@gmail.com) (тема письма "lanit-bus-bot <вопрос/предложение/дефект>")
+           |Оцените бота тут: https://storebot.me/bot/lanitbusbot
+           |v0.1
         """.stripMargin,
         ParseMode.Markdown
       )
@@ -150,6 +150,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
            |Автор бота - Козлов Никита (@pravprod).
            |Исходный код выложен на [GitHub](https://github.com/NKozlov/lanit-bus-bot).
            |Предложения и замечания по работе бота можно отправить на email: [kozlov.bots@gmail.com](mailto:kozlov.bots@gmail.com) (тема письма "lanit-bus-bot <вопрос/предложение/дефект>")
+           |Оцените бота тут: https://storebot.me/bot/lanitbusbot
            |v0.1
         """.stripMargin,
         ParseMode.Markdown
