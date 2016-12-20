@@ -13,6 +13,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
   on("/rizhskaya_office", "Рижская-Офис (маршрутки).") { implicit msg =>
     args =>
+      logger.debug("execute command '/rizhskaya_office' from {}", msg)
       reply(
         "_Маршрутки от м. Рижская до офиса (Мурманский)_\n" + scheduleFromRizhskaya().map(list => list(1)).mkString(", ") + "",
         ParseMode.Markdown
@@ -21,6 +22,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
   on("/marina_office", "Марьина Роща-Офис (маршрутки).") { implicit msg =>
     args =>
+      logger.debug("execute command '/marina_office' from {}", msg)
       reply(
         "_Маршрутки от м. Марьина Роща до офиса (Мурманский)_\n" + scheduleFromMarinaRoszha().map(list => list(1)).mkString(", "),
         ParseMode.Markdown
@@ -29,6 +31,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
   on("/office_rizhskaya", "Офис-Рижская (маршрутки).") { implicit msg =>
     args =>
+      logger.debug("execute command '/office_rizhskaya' from {}", msg)
       reply(
         "_Маршрутки от офиса (Мурманский) до м. Рижская_\n" + scheduleOfficeToRizhskaya().map(list => list(1)).mkString(", "),
         ParseMode.Markdown
@@ -37,7 +40,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
   on("/office_marina", "Офис-Марьина Р (маршрутки).") { implicit msg =>
     args =>
-      logger.debug("execute command '/офис-марьина' from {}", msg)
+      logger.debug("execute command '/office_marina' from {}", msg)
       val date = msg.date
       val chatId = msg.sender
       reply(
@@ -48,6 +51,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
   on("/to_office", "Ближайший транспорт до офиса.") { implicit msg =>
     args =>
+      logger.debug("execute command '/to_office' from {}", msg)
       val sch = scheduleToOffice(new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date(msg.date.toLong * 1000)))
 
       def fromRizhskayaM =
@@ -79,6 +83,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
   on("/to_metro", "Ближайший транспорт до метро.") { implicit msg =>
     args =>
+      logger.debug("execute command '/to_metro' from {}", msg)
       val sch = scheduleToMetro(new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date(msg.date.toLong * 1000)))
 
       def toRizhskayaM =
@@ -111,6 +116,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
   on("/support", "Вопросы и предложения") { implicit msg =>
     args =>
+      logger.debug("execute command '/support' from {}", msg)
       val firstName = msg.from.get.firstName
       val lastName = msg.from.get.lastName.get
       val userName = msg.from.get.username.get
@@ -131,6 +137,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
 
   on("/start") { implicit msg =>
     args =>
+      logger.debug("execute command '/start' from {}", msg)
       val firstName = msg.from.get.firstName
       val lastName = msg.from.get.lastName.get
       val userName = msg.from.get.username.get

@@ -1,6 +1,5 @@
 package pro.nkozlov.telegram.bots.lanitbus
 
-import java.io._
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -15,7 +14,7 @@ class LoadExcelSchedule(path: String) extends LazyLogging {
 
     logger.info("start load excel file '{}'", path)
 
-    val myExcelBook = new XSSFWorkbook(new FileInputStream(getClass.getResource(path).getFile))
+    val myExcelBook = new XSSFWorkbook(getClass.getClassLoader.getResourceAsStream(path))
     logger.debug("loaded excel book")
     val myExcelSheet = myExcelBook.getSheet("Лист1")
     logger.debug("loaded excel sheet = {}", myExcelSheet.getSheetName)
@@ -97,7 +96,7 @@ class LoadExcelSchedule(path: String) extends LazyLogging {
 
 object BusSchedule extends LazyLogging {
 
-  val scheduleBus: Map[String, Map[String, List[List[String]]]] = new LoadExcelSchedule("/20161010.xlsx").loadScheduleFromFile()
+  val scheduleBus: Map[String, Map[String, List[List[String]]]] = new LoadExcelSchedule(ConfigContext.srcExcelFile).loadScheduleFromFile()
 
   // Рижская - Офис
   def scheduleFromRizhskaya(): List[List[String]] = {

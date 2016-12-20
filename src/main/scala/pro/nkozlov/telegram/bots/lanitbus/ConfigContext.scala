@@ -11,4 +11,6 @@ object ConfigContext {
 
   val token: String = conf.getString("lanit-bus-bot.telegram.bot.api.token")
 
+  val srcExcelFile: String = conf.getString("lanit-bus-bot.source.excel")
+
 }
