@@ -6,11 +6,26 @@ scalaVersion := "2.12.1"
 
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-import sbtassembly.AssemblyPlugin.defaultShellScript
+enablePlugins(UniversalPlugin)
 
-assemblyOption in assembly := (assemblyOption in assembly).value.copy(prependShellScript = Some(defaultShellScript))
+// we specify the name for our fat jar
+assemblyJarName in assembly := s"${name.value}-${version.value}-${scalaVersion.value}.jar"
 
-assemblyJarName in assembly := s"${name.value}-${version.value}-${scalaVersion.value}"
+// removes all jar mappings in universal and appends the fat jar
+mappings in Universal := {
+  val universalMappings = (mappings in Universal).value
+  val fatJar = (assembly in Compile).value
+  val filtered = universalMappings filter {
+    case (file, name) => !name.endsWith(".jar")
+  }
+  filtered :+ (fatJar -> ("lib/" + fatJar.getName))
+}
+
+mappings in Universal ++= {
+  ((resourceDirectory in Compile).value * "*").get.map { f =>
+    f -> s"conf/${f.name}"
+  }
+}
 
 libraryDependencies += "info.mukel" %% "telegrambot4s" % "2.0.2-SNAPSHOT"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.7"
