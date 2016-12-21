@@ -117,13 +117,10 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
   on("/support", "Вопросы и предложения") { implicit msg =>
     args =>
       logger.debug("execute command '/support' from {}", msg)
-      val firstName = msg.from.get.firstName
-      val lastName = msg.from.get.lastName.get
-      val userName = msg.from.get.username.get
 
       reply(
         s"""
-           |Автор - Козлов Никита.
+           |Автор - Козлов Никита (@pravprod).
            |
            |Исходный код выложен на [GitHub](https://github.com/NKozlov/lanit-bus-bot).
            |
@@ -139,12 +136,10 @@ object LanitBusBot extends TelegramBot with Polling with Commands {
     args =>
       logger.debug("execute command '/start' from {}", msg)
       val firstName = msg.from.get.firstName
-      val lastName = msg.from.get.lastName.get
-      val userName = msg.from.get.username.get
 
       reply(
         s"""
-           |Приветствую тебя, $firstName $lastName (@$userName)!
+           |Приветствую тебя, $firstName!
            |Я покажу тебе актуальное расписание маршруток компании ЛАНИТ в любое время, просто попроси ;)
            |
            |Основные команды:
