@@ -116,7 +116,7 @@ object BusSchedule extends LazyLogging {
 
   // Марьина Роща - Офис
   def scheduleFromMarinaRoszha(): List[List[String]] = {
-    logger.debug("invoke scheduleOfficeToRizhskaya()")
+    logger.debug("invoke scheduleFromMarinaRoszha()")
     val scheduleMarinaRoszhaOffice = scheduleBus("ToOffice")("FromMarinaRoszha").filter(list => list.head contains "М").sortBy(list => list(1))
     logger.debug("scheduleMarinaRoszhaOffice = {}", scheduleMarinaRoszhaOffice)
     scheduleMarinaRoszhaOffice
@@ -124,7 +124,7 @@ object BusSchedule extends LazyLogging {
 
   // Офис - Марьина Роща
   def scheduleOfficeToMarinaRoszha(): List[List[String]] = {
-    logger.debug("invoke scheduleOfficeToRizhskaya()")
+    logger.debug("invoke scheduleOfficeToMarinaRoszha()")
     val scheduleOfficeMarinaRoszha = scheduleBus("FromOffice")("ToMarinaRoszha").filter(list => list.head contains "М").sortBy(list => list(1))
     logger.debug("scheduleOfficeMarinaRoszha = {}", scheduleOfficeMarinaRoszha)
     scheduleOfficeMarinaRoszha
