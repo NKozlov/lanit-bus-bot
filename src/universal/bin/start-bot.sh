@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-java -Dconfig.file="../conf/application.conf" -Dlogback.configurationFile="../conf/logback.xml" -jar ../lib/lanit-bus-bot-1.0-2.12.1.jar
+java -Dconfig.file="../conf/application.conf" -Dlogback.configurationFile="../conf/logback.xml" -jar ../lib/lanit-bus-bot-2.0-2.12.2.jar

@@ -1,20 +1,24 @@
 package pro.nkozlov.telegram.bots.lanitbus
 
 
+import java.io.FileInputStream
+
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 /**
   * todo Document type BusSchedule
   */
-class LoadExcelSchedule(path: String) extends LazyLogging {
+class LoadExcelSchedule(configContext: ConfigContext = ConfigContextImpl) extends LazyLogging {
+  val fileName: String = configContext.srcExcelFile
+  val folder: String = configContext.scheduleFolder
 
   def loadScheduleFromFile(): Map[String, Map[String, List[List[String]]]] = {
-    logger.debug("invoke loadScheduleFromFile, path = {}", path)
+    logger.debug("invoke loadScheduleFromFile, folder = {}, name = {}", folder, fileName)
 
-    logger.info("start load excel file '{}'", path)
+    logger.info("start load excel file '{}'", fileName)
 
-    val myExcelBook = new XSSFWorkbook(getClass.getClassLoader.getResourceAsStream(path))
+    val myExcelBook = new XSSFWorkbook(new FileInputStream(folder + fileName))
     logger.debug("loaded excel book")
     val myExcelSheet = myExcelBook.getSheet("Лист1")
     logger.debug("loaded excel sheet = {}", myExcelSheet.getSheetName)
@@ -81,7 +85,7 @@ class LoadExcelSchedule(path: String) extends LazyLogging {
       currRow += 1
     }
 
-    logger.info("excel file {} load successful", path)
+    logger.info("excel file {} load successful", fileName)
 
     val scheduleBus = Map("ToOffice" -> Map("FromRizhskaya" -> scheduleRizhskayaOffice, "FromMarinaRoszha" -> scheduleMarinaRoszhaOffice),
       "FromOffice" -> Map("ToRizhskaya" -> scheduleOfficeRizhskaya, "ToMarinaRoszha" -> scheduleOfficeMarinaRoszha))
@@ -94,9 +98,11 @@ class LoadExcelSchedule(path: String) extends LazyLogging {
 
 }
 
-object BusSchedule extends LazyLogging {
+trait Schedule {
+  val scheduleBus: Map[String, Map[String, List[List[String]]]] = new LoadExcelSchedule(ConfigContextImpl).loadScheduleFromFile()
+}
 
-  val scheduleBus: Map[String, Map[String, List[List[String]]]] = new LoadExcelSchedule(ConfigContext.srcExcelFile).loadScheduleFromFile()
+object BusSchedule extends Schedule with LazyLogging {
 
   // Рижская - Офис
   def scheduleFromRizhskaya(): List[List[String]] = {

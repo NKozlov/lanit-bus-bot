@@ -8,7 +8,7 @@ import com.typesafe.scalalogging.LazyLogging
 object Bootstrap extends LazyLogging {
 
   def main(args: Array[String]): Unit = {
-    logger.info("Telegram LanitBusBot start.")
+    logger.info("Telegram LanitBusBot start, v={}", "2.0")
 
     LanitBusBot.run()
 
