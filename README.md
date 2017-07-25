@@ -5,7 +5,7 @@ Telegram Bot for schedule of Lanit Bus.
 # Build
 For build bot, execute command `sbt clean universal:packageBin`
 
-#Run
+# Run
 - `./bot.sh start` launch bot
 - `./bot.sh stop` stop bot
 - `./bot.sh restart` restart bot
