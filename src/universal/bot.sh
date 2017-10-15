@@ -1,6 +1,7 @@
 #!/bin/bash
 DIR=$(cd $(dirname "${BASH_SOURCE[0]}");pwd)
-JAR="lanit-bus-bot-2.0-2.12.2.jar"
+# link to lib/lanit-bus-bot-2.1-2.12.3.jar
+JAR="lanit-bus-bot.jar"
 #JAVA_TZ="-Duser.timezone=Europe/Moscow"
 ARGS="${JAVA_TZ} -Dconfig.file=${DIR}/conf/application.conf -Dlogback.configurationFile=${DIR}/conf/logback.xml"
 START_CMD="java -Xms64m -Xmx128m ${ARGS} -jar ${DIR}/lib/${JAR}"
@@ -21,8 +22,8 @@ start_func () {
       else
          echo -ne "Starting service"
          cd ${DIR}
-#         nohup ${START_CMD} &>> ${DIR}/logs/systemout.log &
-         nohup ${START_CMD} &
+         nohup ${START_CMD} &>> ${DIR}/logs/systemout.log &
+#         nohup ${START_CMD} &
          for i in {1..3}; do sleep 1; echo -ne '.'; done
          for i in {1..7}; do sleep 1; if ! proc_alive; then echo -ne '.'; else break; fi; done
          if proc_alive; then echo -e "\nService is started with PID $(get_pid)"; else echo -e "\nService start failed. Check log ${DIR}/logs/systemout.log ."; fi
