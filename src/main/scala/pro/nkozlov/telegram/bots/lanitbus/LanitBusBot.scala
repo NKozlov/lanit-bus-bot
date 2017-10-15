@@ -1,18 +1,17 @@
 package pro.nkozlov.telegram.bots.lanitbus
 
-import info.mukel.telegrambot4s._
-import api._
-import methods._
-import Implicits._
+import info.mukel.telegrambot4s.Implicits._
+import info.mukel.telegrambot4s.api._
 import info.mukel.telegrambot4s.api.declarative.Commands
+import info.mukel.telegrambot4s.methods._
 import info.mukel.telegrambot4s.models.{KeyboardButton, ReplyKeyboardMarkup}
 import pro.nkozlov.telegram.api.CustomCommands
 
 object LanitBusBot extends TelegramBot with Polling with Commands with CustomCommands {
-  val TO_OFFICE_BUTTON = "Офис"
-  val TO_METRO_BUTTON = "Метро"
+  val TO_OFFICE_BUTTON: String = ConfigContextImpl.buttonOffice
+  val TO_METRO_BUTTON: String = ConfigContextImpl.buttonMetro
   val HELP = "/help"
-  val VERSION = "2.0"
+  val VERSION = "2.1"
 
   import BusSchedule._
 
@@ -81,7 +80,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands with CustomCom
       "_Ближайший транспорт до офиса_\n" +
         "*От м. Рижская*\n" +
         "\uD83D\uDE90(М): " + fromRizhskayaM + "\n" +
-        "\uD83D\uDE8C(А): " + fromRizhskayaA + "\n\n" +
+        "\uD83D\uDE8C(№239): " + fromRizhskayaA + "\n\n" +
 
         "*От м. Марьина Роща*\n" +
         "\uD83D\uDE90(М): " + fromMarinaRoszhaM + "\n",
@@ -113,7 +112,7 @@ object LanitBusBot extends TelegramBot with Polling with Commands with CustomCom
       "_Ближайший транспорт из офиса_\n" +
         "*До м. Рижская*\n" +
         "\uD83D\uDE90(М): " + toRizhskayaM + "\n" +
-        "\uD83D\uDE8C(А): " + toRizhskayaA + "\n\n" +
+        "\uD83D\uDE8C(№239): " + toRizhskayaA + "\n\n" +
 
         "*До м. Марьина Роща*\n" +
         "\uD83D\uDE90(М): " + toMarinaRoszhaM + "\n",

@@ -1,8 +1,8 @@
 name := "lanit-bus-bot"
 
-version := "2.0"
+version := "2.1"
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.12.3"
 
 resolvers += Resolver.sonatypeRepo("snapshots")
 
@@ -34,9 +34,9 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.7"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
 libraryDependencies += "org.apache.poi" % "poi" % "3.15"
 libraryDependencies += "org.apache.poi" % "poi-ooxml" % "3.15"
-libraryDependencies += "com.typesafe" % "config" % "1.3.1"
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
-libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % Test
+libraryDependencies += "com.typesafe" % "config" % "1.3.2"
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.4"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % Test
 // dependency for run on jre
-libraryDependencies += "org.scala-lang" % "scala-library" % "2.12.2"
+libraryDependencies += "org.scala-lang" % "scala-library" % "2.12.3"

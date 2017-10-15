@@ -6,9 +6,6 @@ import java.io.FileInputStream
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
-/**
-  * todo Document type BusSchedule
-  */
 class LoadExcelSchedule(configContext: ConfigContext = ConfigContextImpl) extends LazyLogging {
   val fileName: String = configContext.srcExcelFile
   val folder: String = configContext.scheduleFolder
@@ -16,7 +13,7 @@ class LoadExcelSchedule(configContext: ConfigContext = ConfigContextImpl) extend
   def loadScheduleFromFile(): Map[String, Map[String, List[List[String]]]] = {
     logger.debug("invoke loadScheduleFromFile, folder = {}, name = {}", folder, fileName)
 
-    logger.info("start load excel file '{}'", fileName)
+    logger.info("start load excel file '{}' (from '{}')", fileName, new java.io.File(".").getCanonicalPath)
 
     val myExcelBook = new XSSFWorkbook(new FileInputStream(folder + fileName))
     logger.debug("loaded excel book")
@@ -24,29 +21,34 @@ class LoadExcelSchedule(configContext: ConfigContext = ConfigContextImpl) extend
     logger.debug("loaded excel sheet = {}", myExcelSheet.getSheetName)
 
     // settings
-    val startRow = 3
+    val startRow = 2
     var currRow = startRow
-    val lastRowRizhskayaOffice = 35
-    val lastRowOfficeRizhskaya = 38
-    val startRowMarinaRoszha = 42
-    val lastRowOfficeMarinaRoszha = 45
-    val lastRow = 47
+    val lastRowRizhskayaOffice = 44
+    val lastRowOfficeRizhskaya = 46
+    val startRowMarinaRoszha = 48
+    val lastRowOfficeMarinaRoszha = 51
+    val lastRowMarinaRoszhaOffice = 53
+    val lastRow = lastRowMarinaRoszhaOffice
 
-    // Описание расписания Рижская-Мурманский (первая часть)
-    val cellRizhskayaToOfficeType1 = 0
-    val cellRizhskayaToOfficeTime1 = 1
+    // Рижская-Мурманский
+    val cellRizhskayaToOfficeType1 = 1
+    val cellRizhskayaToOfficeTime1 = 2
+    val cellRizhskayaToOfficeType2 = 3
+    val cellRizhskayaToOfficeTime2 = 4
 
-    // Описание расписания Мурманский-Рижская (первая часть)
-    val cellOfficeToRizhskayaTime1 = 2
-    val cellOfficeToRizhskayaType1 = 3
+    // Мурманский-Рижская
+    val cellOfficeToRizhskayaType1 = 6
+    val cellOfficeToRizhskayaTime1 = 7
+    val cellOfficeToRizhskayaType2 = 8
+    val cellOfficeToRizhskayaTime2 = 9
 
-    // Описание расписания Метро-Офис (вторая часть)
-    val cellMetroToOfficeType = 5
-    val cellMetroToOfficeTime = 6
+    // Марьина Роща-Мурманский
+    val cellMarinaRoszhaOfficeType = 1
+    val cellMarinaRoszhaOfficeTime = 2
 
-    // Описание расписания Офис-Метро (вторая часть)
-    val cellOfficeToMetroTime = 7
-    val cellOfficeToMetroType = 8
+    // Мурманский-Марьина Роща
+    val cellOfficeMarinaRoszhaType = 3
+    val cellOfficeMarinaRoszhaTime = 4
 
 
     var scheduleRizhskayaOffice: List[List[String]] = Nil
@@ -59,37 +61,41 @@ class LoadExcelSchedule(configContext: ConfigContext = ConfigContextImpl) extend
     while (currRow <= lastRow) {
       logger.debug("handle current row = {}", currRow)
       val row = myExcelSheet.getRow(currRow)
-      // Маппинг м. Рижская до офиса (1 столбец)
-      scheduleRizhskayaOffice = List(row.getCell(cellRizhskayaToOfficeType1).getStringCellValue,
-        getTimeFromDate(row.getCell(cellRizhskayaToOfficeTime1).getDateCellValue)) :: scheduleRizhskayaOffice
-      // Маппинг Офис до м. Рижская (1 столбец)
-      scheduleOfficeRizhskaya = List(row.getCell(cellOfficeToRizhskayaType1).getStringCellValue,
-        getTimeFromDate(row.getCell(cellOfficeToRizhskayaTime1).getDateCellValue)) :: scheduleOfficeRizhskaya
-
-      // Маппинг м. Рижская до офиса (2 столбец)
-      if (currRow <= lastRowRizhskayaOffice) scheduleRizhskayaOffice = List(row.getCell(cellMetroToOfficeType).getStringCellValue,
-        getTimeFromDate(row.getCell(cellMetroToOfficeTime).getDateCellValue)) :: scheduleRizhskayaOffice
-      // Маппинг Офис до м. Рижская (2 столбец)
-      if (currRow <= lastRowOfficeRizhskaya) scheduleOfficeRizhskaya = List(row.getCell(cellOfficeToMetroType).getStringCellValue,
-        getTimeFromDate(row.getCell(cellOfficeToMetroTime).getDateCellValue)) :: scheduleOfficeRizhskaya
-
-      if (currRow >= startRowMarinaRoszha) {
-        // Маппинг м. Марьина Роща до офиса (2 столбец)
-        scheduleMarinaRoszhaOffice = List(row.getCell(cellMetroToOfficeType).getStringCellValue,
-          getTimeFromDate(row.getCell(cellMetroToOfficeTime).getDateCellValue)) :: scheduleMarinaRoszhaOffice
-        // Маппинг Офис до м. Марьина Роща (2 столбец)
-        if (currRow <= lastRowOfficeMarinaRoszha) scheduleOfficeMarinaRoszha = List(row.getCell(cellOfficeToMetroType).getStringCellValue,
-          getTimeFromDate(row.getCell(cellOfficeToMetroTime).getDateCellValue)) :: scheduleOfficeMarinaRoszha
+      // Маппинг Рижская-Мурманский (1 столбец)
+      if (currRow <= lastRowRizhskayaOffice) {
+        scheduleRizhskayaOffice = List(row.getCell(cellRizhskayaToOfficeType1).getStringCellValue,
+          getTimeFromDate(row.getCell(cellRizhskayaToOfficeTime1).getDateCellValue)) :: scheduleRizhskayaOffice
+        scheduleRizhskayaOffice = List(row.getCell(cellRizhskayaToOfficeType2).getStringCellValue,
+          getTimeFromDate(row.getCell(cellRizhskayaToOfficeTime2).getDateCellValue)) :: scheduleRizhskayaOffice
       }
-
+      // Маппинг Мурманский-Рижская
+      if (currRow < lastRowOfficeRizhskaya) {
+        scheduleOfficeRizhskaya = List(row.getCell(cellOfficeToRizhskayaType1).getStringCellValue,
+          getTimeFromDate(row.getCell(cellOfficeToRizhskayaTime1).getDateCellValue)) :: scheduleOfficeRizhskaya
+        scheduleOfficeRizhskaya = List(row.getCell(cellOfficeToRizhskayaType2).getStringCellValue,
+          getTimeFromDate(row.getCell(cellOfficeToRizhskayaTime2).getDateCellValue)) :: scheduleOfficeRizhskaya
+      } else if (currRow == lastRowOfficeRizhskaya) {
+        // Мурманский-Рижская -- не заполнены значения в последней строке во второй колонке
+        scheduleOfficeRizhskaya = List(row.getCell(cellOfficeToRizhskayaType1).getStringCellValue,
+          getTimeFromDate(row.getCell(cellOfficeToRizhskayaTime1).getDateCellValue)) :: scheduleOfficeRizhskaya
+      }
+      // Маппинг Марьина Роща
+      if (currRow >= startRowMarinaRoszha) {
+        // Маппинг Марьина Роща-Мурманский
+        if (currRow <= lastRowMarinaRoszhaOffice) {
+          scheduleMarinaRoszhaOffice = List(row.getCell(cellMarinaRoszhaOfficeType).getStringCellValue,
+            getTimeFromDate(row.getCell(cellMarinaRoszhaOfficeTime).getDateCellValue)) :: scheduleMarinaRoszhaOffice
+        }
+        // Маппинг Мурманскйи-Марьина Роща
+        if (currRow <= lastRowOfficeMarinaRoszha) scheduleOfficeMarinaRoszha = List(row.getCell(cellOfficeMarinaRoszhaType).getStringCellValue,
+          getTimeFromDate(row.getCell(cellOfficeMarinaRoszhaTime).getDateCellValue)) :: scheduleOfficeMarinaRoszha
+      }
       currRow += 1
     }
-
     logger.info("excel file {} load successful", fileName)
 
     val scheduleBus = Map("ToOffice" -> Map("FromRizhskaya" -> scheduleRizhskayaOffice, "FromMarinaRoszha" -> scheduleMarinaRoszhaOffice),
       "FromOffice" -> Map("ToRizhskaya" -> scheduleOfficeRizhskaya, "ToMarinaRoszha" -> scheduleOfficeMarinaRoszha))
-
     logger.debug("scheduleBus = {}", scheduleBus)
 
     scheduleBus
